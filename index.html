@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <title>官網</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" >
+    <link rel="stylesheet" href="./css/css_var.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/official_website.css">
+    <script src="./toggle_full_screen.js?10"></script>
+    <style>
+    </style>
+  </head>
+  <body>
+    <main id="official_website">
+      <header class="official_website">
+        <div class="menu">
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+        </div>
+        <div class="sub_menu"></div>
+        <button id="cur_page" onclick="header_toggle()">
+          <img src="https://images.plurk.com/7sc67NLU4Tnj2q2SAqkdMk.png"/>
+        </button>
+        <button id="open_game_btn">啟動遊戲</button>
+      </header>
+      <iframe src="./pages/home.html"></iframe>
+      <footer class="official_website">
+        <div id="breadcrumb">
+          <div>角色</div>
+          <div>角色報名</div>
+          <div>需準備的東西</div>
+        </div>
+        <button id="sitemap_btn"></button>
+      </footer>
+    </main>
+    <script>
+      window.onload = () => {
+      };
+      function header_toggle() {
+        document.querySelector('header').classList.toggle('open');
+      }
+    </script>
+  </body>
+</html>
