@@ -7,9 +7,9 @@
     <link rel="stylesheet" href="./css/css_var.css">
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./css/official_website.css">
-    <script src="./toggle_full_screen.js?10"></script>
-    <style>
-    </style>
+    <script src="./js/universal.js"></script>
+    <script src="./js/path.js"></script>
+    <script src="./js/page_universal_files.js"></script>
   </head>
   <body>
     <main id="official_website">
@@ -29,21 +29,67 @@
         </button>
         <button id="open_game_btn">啟動遊戲</button>
       </header>
-      <iframe src="./pages/home.html"></iframe>
+      <iframe id="content"></iframe>
       <footer class="official_website">
         <div id="breadcrumb">
-          <div>角色</div>
-          <div>角色報名</div>
-          <div>需準備的東西</div>
+          <div>載入中...</div>
         </div>
         <button id="sitemap_btn"></button>
       </footer>
     </main>
     <script>
       window.onload = () => {
+        content.onload = () => {
+          let breadcrumb_el = find(content.contentWindow.document, "breadcrumb");
+          if(breadcrumb_el) set_breadcrumb(breadcrumb_el.innerText);
+          content.contentWindow.to_page = (hash) => location.hash = hash;
+          create_universal_file(content.contentWindow.document);
+        };
+        set_content_src();
       };
+      window.onhashchange = set_content_src;
+      function set_content_src() {
+        let hash = location.hash.substr(1);
+        if(!hash) return location.replace("#/");
+        let path = path_list[hash];
+        if(!path) {
+          location.replace("#/404");
+          location.reload();
+          return;
+        }
+        content.contentWindow.location.replace("./pages" + path.src);
+        set_breadcrumb(path.breadcrumb);
+      }
+      function set_breadcrumb(breadcrumb = "") {
+        find("#breadcrumb").innerHTML = breadcrumb.split("/")
+        .map(name => name ? "<div>" + name + "</div>" : "").join("");
+      }
       function header_toggle() {
         document.querySelector('header').classList.toggle('open');
+      }
+      function create_universal_file(target_doc) {
+        page_universal_files.forEach(({type, path}) => {
+          if(type == "css") {
+            let el = new_el('link');
+            el.rel = "stylesheet";
+            el.href = base_path + "/css/" + path;
+            el.onload = on_all_load;
+            target_doc.head.append(el);
+          }
+          else if(type == "js") {
+            let el = new_el('script');
+            el.src = base_path + "/js/" + path;
+            el.onload = on_all_load;
+            target_doc.head.append(el);
+          }
+        });
+        let loaded = 0;
+        function on_all_load() {
+          if(++loaded < page_universal_files.length) return;
+          let el = new_el('script');
+          el.innerHTML = "set_to_page_event()";
+          target_doc.body.append(el);
+        }
       }
     </script>
   </body>
