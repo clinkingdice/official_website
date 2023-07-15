@@ -30,7 +30,7 @@
         </button>
         <button id="open_game_btn">啟動遊戲</button>
       </header>
-      <iframe id="content" class="hidden"></iframe>
+      <div id="content" class="hidden"></div>
       <footer class="official_website">
         <div id="breadcrumb">
           <div>載入中...</div>
@@ -40,10 +40,6 @@
     </main>
     <script>
       window.onload = () => {
-        content.onload = () => {
-          content.contentWindow.to_page = (hash) => location.hash = hash;
-          create_universal_file(content.contentWindow.document);
-        };
         set_content_src();
       };
       window.onhashchange = set_content_src;
@@ -58,9 +54,19 @@
             location.reload();
             return;
           }
-          content.contentWindow.location.replace("./pages" + path.src);
           set_breadcrumb(path.breadcrumb);
-        }, 600);
+          change_content("./pages" + path.src);
+        }, 300);
+      }
+      function change_content(src) {
+        let new_iframe = new_el('iframe');
+        new_iframe.onload = () => {
+          new_iframe.contentWindow.to_page = (hash) => location.hash = hash;
+          create_universal_file(new_iframe.contentWindow.document);
+        };
+        content.innerHTML = "";
+        content.appendChild(new_iframe);
+        new_iframe.src = src;
       }
       function set_breadcrumb(breadcrumb = "") {
         find("#breadcrumb").innerHTML = breadcrumb.split("/")
@@ -91,7 +97,7 @@
           let el = new_el('script');
           el.innerHTML = "set_to_page_event()";
           target_doc.body.append(el);
-          content.classList.remove('hidden');
+          setTimeout(() => content.classList.remove('hidden'), 100);
         }
       }
     </script>
