@@ -30,7 +30,7 @@
         </button>
         <button id="open_game_btn">啟動遊戲</button>
       </header>
-      <iframe id="content"></iframe>
+      <iframe id="content" class="hidden"></iframe>
       <footer class="official_website">
         <div id="breadcrumb">
           <div>載入中...</div>
@@ -41,8 +41,6 @@
     <script>
       window.onload = () => {
         content.onload = () => {
-          let breadcrumb_el = find(content.contentWindow.document, "breadcrumb");
-          if(breadcrumb_el) set_breadcrumb(breadcrumb_el.innerText);
           content.contentWindow.to_page = (hash) => location.hash = hash;
           create_universal_file(content.contentWindow.document);
         };
@@ -50,16 +48,19 @@
       };
       window.onhashchange = set_content_src;
       function set_content_src() {
-        let hash = location.hash.substr(1);
-        if(!hash) return location.replace("#/");
-        let path = path_list[hash];
-        if(!path) {
-          location.replace("#/404");
-          location.reload();
-          return;
-        }
-        content.contentWindow.location.replace("./pages" + path.src);
-        set_breadcrumb(path.breadcrumb);
+        content.classList.add('hidden');
+        setTimeout(() => {
+          let hash = location.hash.substr(1);
+          if(!hash) return location.replace("#/");
+          let path = path_list[hash];
+          if(!path) {
+            location.replace("#/404");
+            location.reload();
+            return;
+          }
+          content.contentWindow.location.replace("./pages" + path.src);
+          set_breadcrumb(path.breadcrumb);
+        }, 600);
       }
       function set_breadcrumb(breadcrumb = "") {
         find("#breadcrumb").innerHTML = breadcrumb.split("/")
@@ -90,6 +91,7 @@
           let el = new_el('script');
           el.innerHTML = "set_to_page_event()";
           target_doc.body.append(el);
+          content.classList.remove('hidden');
         }
       }
     </script>
