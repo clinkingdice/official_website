@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="./css/common.css">
     <link rel="stylesheet" href="./css/official_website.css">
     <script src="./js/universal.js"></script>
+    <script src="./js/get.js"></script>
+    <script src="./js/to_page.js"></script>
     <script src="./js/path.js"></script>
     <script src="./js/base_path.js"></script>
     <script src="./js/page_universal_files.js"></script>
@@ -16,8 +18,10 @@
     <main id="official_website">
       <header class="official_website">
         <div class="menu">
-          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
-          <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img onclick="click_page_icon('a')"
+            src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
+          <img onclick="click_page_icon('b')"
+            src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
           <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
           <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
           <img src="https://images.plurk.com/2S5jt205th6ewSoWXJKHM7.png"/>
@@ -28,7 +32,7 @@
         <button id="cur_page" onclick="header_toggle()">
           <img src="https://images.plurk.com/7sc67NLU4Tnj2q2SAqkdMk.png"/>
         </button>
-        <button id="open_game_btn">啟動遊戲</button>
+        <button id="open_game_btn" onclick="window.open('/game/', '_blank')">啟動遊戲</button>
       </header>
       <div id="content" class="hidden"></div>
       <footer class="official_website">
@@ -61,7 +65,6 @@
       function change_content(src) {
         let new_iframe = new_el('iframe');
         new_iframe.onload = () => {
-          new_iframe.contentWindow.to_page = (hash) => location.hash = hash;
           create_universal_file(new_iframe.contentWindow.document);
         };
         content.innerHTML = "";
@@ -69,11 +72,8 @@
         new_iframe.src = src;
       }
       function set_breadcrumb(breadcrumb = "") {
-        find("#breadcrumb").innerHTML = breadcrumb.split("/")
+        find("#breadcrumb").innerHTML = breadcrumb.split(">")
         .map(name => name ? "<div>" + name + "</div>" : "").join("");
-      }
-      function header_toggle() {
-        document.querySelector('header').classList.toggle('open');
       }
       function create_universal_file(target_doc) {
         page_universal_files.forEach(({type, path}) => {
@@ -94,11 +94,36 @@
         let loaded = 0;
         function on_all_load() {
           if(++loaded < page_universal_files.length) return;
-          let el = new_el('script');
-          el.innerHTML = "set_to_page_event()";
-          target_doc.body.append(el);
+          set_to_page_event(window, target_doc);
           setTimeout(() => content.classList.remove('hidden'), 100);
         }
+      }
+      function header_toggle() {
+        document.querySelector('header').classList.toggle('open');
+      }
+      function click_page_icon(page_icon_name) {
+        let menu_el = find('.sub_menu');
+        let temp_name = menu_el.getAttribute('data-cur');
+        menu_el.removeAttribute('data-cur');
+        menu_el.innerHTML = "";
+        if(temp_name != page_icon_name) {
+          setTimeout(() => {
+            set_sub_menu(menu_el, page_icon_name);
+          }, temp_name ? 600 : 1);
+        }
+      }
+      function set_sub_menu(menu_el, page_icon_name) {
+        get.template("sub_menu_" + page_icon_name, data => {
+          menu_el.setAttribute('data-cur', page_icon_name);
+          menu_el.innerHTML = data;
+          find_all(menu_el, '[to_page]').forEach(el => {
+            let path = el.getAttribute('to_page');
+            el.addEventListener('click', () => {
+              location.hash = path;
+              document.querySelector('header').classList.remove('open');
+            });
+          });
+        });
       }
     </script>
   </body>

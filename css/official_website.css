@@ -41,6 +41,7 @@ header.official_website {
   gap: 16px;
   transition: top .6s;
   padding: 8px 0 8px;
+  z-index: 1000;
 }
 header.official_website.open {
   top: 0;
@@ -143,6 +144,46 @@ header.official_website .sub_menu:empty {
   padding: 0 16px;
   border-width: 0 2px;
   margin-bottom: 0;
+}
+
+/* 頁首子選單 - 選項 */
+header.official_website .sub_menu ul {
+  all: unset;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 16px;
+}
+header.official_website .sub_menu li {
+  all: unset;
+  display: block;
+  position: relative;
+}
+header.official_website .sub_menu li[to_page] {
+  cursor: pointer;
+}
+header.official_website .sub_menu ul li:before {
+  content: "";
+  position: absolute;
+  left: -14px;
+  bottom: 7px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+}
+header.official_website .sub_menu ul ul li:before {
+  content: "";
+  border: none;
+  bottom: 8px;
+  background: currentColor;
+}
+header.official_website .sub_menu ul ul ul li:before {
+  content: "";
+  left: -12px;
+  bottom: 9px;
+  height: 1px;
+  border-radius: 0;
 }
 
 /* 頁腳 */

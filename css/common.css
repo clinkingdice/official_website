@@ -26,6 +26,29 @@ body .hidden { display: none; }
   background: var(--bg_dusk);
 }
 
+/* 滾動條 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #fff3 #0003;
+}
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  background: #0003;
+}
+*::-webkit-scrollbar-corner {
+  background: #0003;
+}
+*::-webkit-scrollbar-thumb {
+  background: #fff3;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #cfcfcf33;
+}
+*::-webkit-scrollbar-thumb:active {
+  background: #79797933;
+}
+
 /* 設定組 */
 .window_outer {
   width: 100vw;
